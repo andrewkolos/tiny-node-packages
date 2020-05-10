@@ -19,6 +19,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@akolos/custom-error": "0.0.1",
     "@types/dedent": "^0.7.0",
     "@types/read": "0.0.28",
     "ts-nameof": "^4.2.2"
