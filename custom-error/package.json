@@ -1,5 +1,5 @@
 {
-  "name": "@akolos/ts-custom-error",
+  "name": "@akolos/custom-error",
   "version": "0.0.1",
   "main": "build/cjs/index.js",
   "module": "build/index.js",
@@ -15,7 +15,7 @@
     "test:debug": "node --inspect-brk=0.0.0.0 node_modules/jest/bin/jest.js --runInBand --config jest.config.js",
     "publish": "npm run build && npm publish --access=public"
   },
-  "keywords": [],
+  "keywords": ["custom error", "typescript"],
   "author": "",
   "license": "ISC",
   "dependencies": {
