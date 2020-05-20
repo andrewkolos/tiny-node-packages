@@ -1,5 +1,5 @@
 {
-  "name": "@akolos/ts-custom-error",
+  "name": "@akolos/event-emitter",
   "version": "0.0.1",
   "main": "build/cjs/index.js",
   "module": "build/index.js",
