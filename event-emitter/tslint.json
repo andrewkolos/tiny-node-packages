@@ -1,6 +1,6 @@
 {
     "extends": [
-        "tslint:recommended",
+        "tslint:recommended"
     ],
     "rules": {
         "missing-jsdoc": false,
@@ -24,16 +24,6 @@
             "allow-leading-underscore"
         ],
         "curly": false,
-        "function-name": [
-            true,
-            {
-                "function-regex": "[a-z$][\\w\\d]+",
-                "method-regex": "[a-z$][\\w\\d]+",
-                "private-method-regex": "[a-z$][\\w\\d]+",
-                "protected-method-regex": "[a-z$][\\w\\d]+",
-                "static-method-regex": "[a-z$][\\w\\d]+"
-            }
-        ],
         "no-submodule-imports": false,
         "no-implicit-dependencies": false,
         "ordered-imports": false,
