@@ -8,9 +8,9 @@ export class EventEmitter<T extends { [K in keyof T]: (...args: any) => any; }> 
   private handlers: { [K in keyof T]: Array<T[K]>; } = {} as any;
 
   /**
-   * Adds a listener for an event.
-   * @param event 
-   * @param handler 
+   * Adds a handler for an event.
+   * @param event The event to listen to.
+   * @param handler The handler that will be called when the event is fired.
    */
   public on<K extends keyof T>(event: K, handler: T[K]): T[K] {
     const eventHandlers = this.handlers[event] == null ? [] : this.handlers[event];
@@ -19,6 +19,11 @@ export class EventEmitter<T extends { [K in keyof T]: (...args: any) => any; }> 
     return handler;
   }
 
+  /**
+   * Removes/deregisters an existing handler for an event.
+   * @param event The event that the handler is listening to.
+   * @param handler The handler to remove.
+   */
   public off<K extends keyof T>(event: K, handler: T[K]): void {
     if (handler == null)
       return;
