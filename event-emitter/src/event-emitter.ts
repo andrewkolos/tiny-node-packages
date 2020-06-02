@@ -5,7 +5,7 @@ import { HandlerNotFoundError } from 'handler-not-found-error';
  */
 export class EventEmitter<T extends { [K in keyof T]: (...args: any) => any; }> {
 
-  private handlers: { [K in keyof T]: Array<T[K]>; } = {} as any;
+  private handlers: { [K in keyof T]: T[K][]; } = {} as any;
 
   /**
    * Adds a handler for an event.
