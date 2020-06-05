@@ -1,0 +1,44 @@
+{
+  "name": "interval-task-runner",
+  "version": "1.0.6",
+  "main": "build/es5/index.js",
+  "module": "build/index.js",
+  "types": "build/index.d.ts",
+  "scripts": {
+    "build": "tsc && tsc --outDir build/es5/ --m commonjs",
+    "doc": "typedoc --theme markdown --excludeExternals --excludePrivate --excludeNotExported",
+    "test": "jest --verbose --forceExit",
+    "test:debug": "node --inspect-brk=0.0.0.0 node_modules/jest/bin/jest.js --runInBand --config jest.config.js --forceExit",
+    "publish": "npm publish --access=public"
+  },
+  "keywords": [],
+  "author": "Andrew Kolos",
+  "repository": {
+    "url": "https://github.com/andrewkolos/interval-task-runner"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "@types/dedent": "^0.7.0",
+    "@types/read": "0.0.28",
+    "ts-nameof": "^3.2.0"
+  },
+  "devDependencies": {
+    "@types/jest": "^24.0.15",
+    "@types/node": "^12.6.8",
+    "@types/ts-nameof": "^3.2.0",
+    "jest": "^24.8.0",
+    "jsdoc-to-markdown": "^5.0.1",
+    "ts-jest": "^24.0.2",
+    "ts-node-register": "^1.0.0",
+    "tslint": "^5.18.0",
+    "tslint-clean-code": "^0.2.9",
+    "typedoc": "^0.15.0",
+    "typedoc-plugin-markdown": "^2.1.9",
+    "typescript": "^3.5.3"
+  },
+  "description": "Repeatedly executes a function with a minimum time delay between reach call (with millisecond precision). Written in TypeScript.",
+  "engines": {
+    "node": "8.9.3",
+    "npm": "5.6.0"
+  }
+}
