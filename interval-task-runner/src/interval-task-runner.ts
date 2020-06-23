@@ -36,7 +36,7 @@ export class IntervalTaskRunner {
    */
   public stop(): this {
     // TS compiler is unsure if we are using a Node interval or a web API interval.
-    // Either is fine as both APIs are identical, so we perform a cast here.
+    // Either is fine as both APIs are identical, so we perform a type assertion here.
     clearInterval(this.intervalId as NodeJS.Timeout & number);
     this.running = false;
     return this;

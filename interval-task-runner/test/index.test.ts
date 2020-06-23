@@ -1,4 +1,4 @@
-import { IntervalTaskRunner, Interval } from 'index';
+import { IntervalTaskRunner, Interval } from '../src/index';
 
 jest.useRealTimers();
 
@@ -39,6 +39,6 @@ describe(nameof(IntervalTaskRunner), () => {
       } else {
         done();
       }
-    }, interval.ms * numberOfRuns); // Added time is a grace-period for the inner setTimeout.
+    }, interval.ms * (numberOfRuns + 1));
   });
 });
