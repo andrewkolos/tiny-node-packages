@@ -1,4 +1,4 @@
-import { HandlerNotFoundError } from 'handler-not-found-error';
+import { HandlerNotFoundError } from './handler-not-found-error';
 
 /**
  * Similar to the NodeJS EventEmitter.
@@ -13,7 +13,7 @@ export class PublicEventEmitter<T extends { [K in keyof T]: (...args: any) => an
    * @param handler The handler that will be called when the event is fired.
    * @returns This.
    */
-  public on(event: keyof T, handler: T[keyof T]): this {
+  public on<K extends keyof T>(event: K, handler: T[K]): this {
     const eventHandlers = this.handlers[event] == null ? [] as T[keyof T][] : this.handlers[event];
     eventHandlers.push(handler);
     this.handlers[event] = eventHandlers;
@@ -26,7 +26,7 @@ export class PublicEventEmitter<T extends { [K in keyof T]: (...args: any) => an
    * @param handler The handler to remove.
    * @returns This.
    */
-  public off(event: keyof T, handler: T[keyof T]): this {
+  public off<K extends keyof T>(event: K, handler: T[K]): this {
     if (handler == null) {
       return this;
     }
@@ -41,13 +41,13 @@ export class PublicEventEmitter<T extends { [K in keyof T]: (...args: any) => an
     return this;
   }
 
-  /** 
+  /**
    * Raises an event, calling all handlers registered to it with the provided arguments. 
    * @param event The event to raise.
    * @param args The arguments to pass each handler.
    * @returns This. 
    */
-  public emit(event: keyof T, ...args: Parameters<T[keyof T]>): this {
+  public emit<K extends keyof T>(event: K, ...args: Parameters<T[K]>): this {
     const eventHandlers = this.handlers[event];
 
     if (!eventHandlers) {
