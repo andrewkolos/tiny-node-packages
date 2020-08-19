@@ -3,7 +3,7 @@ import { HandlerNotFoundError } from './handler-not-found-error';
 /**
  * Similar to the NodeJS EventEmitter.
  */
-export class PublicEventEmitter<T extends { [K in keyof T]: (...args: any) => any; }> {
+export class PublicEventEmitter<T extends { [K in keyof T]: (...args: any[]) => any; }> {
 
   private handlers: Record<keyof T, T[keyof T][]> = {} as any;
 
@@ -42,10 +42,10 @@ export class PublicEventEmitter<T extends { [K in keyof T]: (...args: any) => an
   }
 
   /**
-   * Raises an event, calling all handlers registered to it with the provided arguments. 
+   * Raises an event, calling all handlers registered to it with the provided arguments.
    * @param event The event to raise.
    * @param args The arguments to pass each handler.
-   * @returns This. 
+   * @returns This.
    */
   public emit<K extends keyof T>(event: K, ...args: Parameters<T[K]>): this {
     const eventHandlers = this.handlers[event];
@@ -54,7 +54,7 @@ export class PublicEventEmitter<T extends { [K in keyof T]: (...args: any) => an
       return this;
     }
 
-    eventHandlers.forEach((handler: T[keyof T]) => handler(args));
+    eventHandlers.forEach((handler: T[keyof T]) => handler(...args));
     return this;
   }
 }
