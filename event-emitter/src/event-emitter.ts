@@ -39,4 +39,12 @@ export class EventEmitter<T extends { [K in keyof T]: (...args: any[]) => any; }
     this.internalEmitter.emit(event, ...args);
     return this;
   }
+
+  /**
+   * Gets the number of listeners listening to a specific event.
+   * @param eventName The event.
+   */
+  protected listenerCount(eventName: keyof T): number {
+    return this.internalEmitter.listenerCount(eventName);
+  }
 }
