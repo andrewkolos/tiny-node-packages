@@ -1,5 +1,4 @@
 import { EventEmitter } from '../src/event-emitter';
-import { PublicEventEmitter } from '../src/public-event-emitter';
 
 interface FooEvents {
   foo: (fooCount: number) => void;
@@ -117,13 +116,5 @@ describe(nameof(EventEmitter), () => {
     expect(broadCastListener).toBeCalledWith('1');
     expect(multiListener).toBeCalledWith(1, '1');
 
-  });
-
-  it('correctly maintains the count of listeners for events', () => {
-    const emitter = new PublicEventEmitter<FooEvents>();
-    for (let i = 1; i <= 10; i++) {
-      emitter.on('foo', () => { });
-      expect(emitter.listenerCount('foo')).toBe(i);
-    }
   });
 });

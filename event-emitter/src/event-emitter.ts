@@ -1,9 +1,10 @@
 import { PublicEventEmitter } from './public-event-emitter';
+import { Events } from './events';
 
 /**
  * Similar to the NodeJS EventEmitter. It is specifically meant for subclassing/inheritting from in TypeScript.
  */
-export class EventEmitter<T extends { [K in keyof T]: (...args: any[]) => any; }> {
+export class EventEmitter<T extends Events<T>> {
   private readonly internalEmitter = new PublicEventEmitter<T>();
 
   /**
