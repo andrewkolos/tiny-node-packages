@@ -18,6 +18,7 @@
         "typedef": false,
         "no-any": false,
         "no-unbound-method": true,
+        "no-namespace": false,
         "no-null-keyword": false,
         "variable-name": [
             true,

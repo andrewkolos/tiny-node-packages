@@ -1,120 +1,61 @@
 import { EventEmitter } from '../src/event-emitter';
 
 interface FooEvents {
-  foo: (fooCount: number) => void;
-  broadcast: (text: string) => void;
+  num: (fooCount: number) => void;
+  str: (text: string) => void;
   multi: (fooCount: number, text: string) => void;
 }
 
-class ObservableFooer extends EventEmitter<FooEvents> {
-  private fooCount = 0;
-
-  public foo() {
-    this.fooCount++;
-    this.emit('foo', this.fooCount);
-  }
-
-  public broadcast() {
-    this.emit('broadcast', String(this.fooCount));
-  }
-
-  public multiCast() {
-    this.emit('multi', this.fooCount, String(this.fooCount));
-  }
-
-  public listenerCount(eventName: keyof FooEvents) {
-    return super.listenerCount(eventName);
-  }
-}
-
 describe(nameof(EventEmitter), () => {
-  it('calls a listener listening to a specific event when it is fired', () => {
-    const fooer = new ObservableFooer();
-    const fn = jest.fn();
-    fooer.on('foo', fn);
-    fooer.foo();
-    expect(fn).toBeCalledWith(1);
+
+  it('correctly maintains the count of listeners for events', () => {
+    const emitter = new EventEmitter<FooEvents>();
+    for (let i = 1; i <= 10; i++) {
+      emitter.on('num', () => { });
+      expect(emitter.listenerCount('num')).toBe(i);
+    }
   });
 
-  it('calls all event listeners listening to a specific event', () => {
-    const fooer = new ObservableFooer();
-    const fns = [...Array(10).keys()].map(() => {
-      const fn = jest.fn();
-      fooer.on('foo', fn);
-      return fn;
+  describe('makeDelegate', () => {
+    it(`delegate correctly delegates calls to 'on' to the emitter`, () => {
+      const expectedSelf = { foo: 3 };
+      const emitter = new EventEmitter<FooEvents>();
+      const on = emitter.makeDelegate('on', expectedSelf);
+      const listener = jest.fn();
+
+      const self = on('num', listener);
+      emitter.emit('num', 1);
+
+      expect(listener).toBeCalled();
+      expect(self).toBe(expectedSelf);
     });
 
-    fooer.foo();
+    it(`correctly delegates calls to 'off' to the original emitter`, () => {
 
-    fns.forEach((fn) => expect(fn).toHaveBeenCalledWith(1));
-  });
+      const expectedSelf = { foo: 3 };
+      const emitter = new EventEmitter<FooEvents>();
+      const off = emitter.makeDelegate('off', expectedSelf);
 
-  it('does not call listeners listening to a different event than the one fired', () => {
-    const fooer = new ObservableFooer();
-    const fooListener = jest.fn();
-    fooer.on('foo', fooListener);
-    const broadcastListener = jest.fn();
-    fooer.on('broadcast', broadcastListener);
+      const listener = jest.fn();
+      emitter.on('num', listener);
+      const self = off('num', listener);
+      emitter.emit('num', 1);
 
-    fooer.foo();
-    expect(fooListener).toHaveBeenCalledTimes(1);
-    expect(broadcastListener).toHaveBeenCalledTimes(0);
+      expect(listener).toBeCalledTimes(0);
+      expect(self).toBe(expectedSelf);
+    });
 
-    fooer.broadcast();
-    expect(fooListener).toHaveBeenCalledTimes(1);
-    expect(broadcastListener).toHaveBeenCalledTimes(1);
-  });
+    it(`correctly delegates calls to 'emit' to the emitter`, () => {
+      const expectedSelf = { foo: 3 };
+      const emitter = new EventEmitter<FooEvents>();
+      const emit = emitter.makeDelegate('emit', expectedSelf);
 
-  it('when instructed to remove a listener, removes the correct listener and only that listener', () => {
-    const fooer = new ObservableFooer();
-    const listener1 = jest.fn();
-    const listener2 = jest.fn();
-    const listener3 = jest.fn();
+      const listener = jest.fn();
+      emitter.on('num', listener);
+      const self = (emit as any)('num', 1);
 
-    [listener1, listener2, listener3].forEach((l) => fooer.on('foo', l));
-
-    fooer.off('foo', listener2);
-    fooer.foo();
-
-    expect(listener1).toHaveBeenCalledTimes(1);
-    expect(listener2).toHaveBeenCalledTimes(0);
-    expect(listener3).toHaveBeenCalledTimes(1);
-  });
-
-  it('allows for method chaining', () => {
-    const fooer = new ObservableFooer();
-    const listener1 = jest.fn();
-    const listener2 = jest.fn();
-    const listener3 = jest.fn();
-
-    fooer
-      .on('foo', listener1)
-      .on('foo', listener2)
-      .on('foo', listener3)
-      .off('foo', listener2);
-
-    fooer.foo();
-
-    expect(listener1).toHaveBeenCalledTimes(1);
-    expect(listener2).toHaveBeenCalledTimes(0);
-    expect(listener3).toHaveBeenCalledTimes(1);
-  });
-
-  it('correctly supplies parameters to listeners', () => {
-    const fooer = new ObservableFooer();
-    const fooListener = jest.fn();
-    const broadCastListener = jest.fn();
-    const multiListener = jest.fn();
-
-    fooer.on('foo', fooListener).on('broadcast', broadCastListener).on('multi', multiListener);
-
-    fooer.foo();
-    fooer.broadcast();
-    fooer.multiCast();
-
-    expect(fooListener).toBeCalledWith(1);
-    expect(broadCastListener).toBeCalledWith('1');
-    expect(multiListener).toBeCalledWith(1, '1');
-
-  });
+      expect(listener).toBeCalledTimes(1);
+      expect(self).toBe(expectedSelf);
+    });
+  })
 });

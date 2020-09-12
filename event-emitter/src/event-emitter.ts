@@ -1,51 +1,102 @@
-import { PublicEventEmitter } from './public-event-emitter';
+
 import { Events } from './events';
 
 /**
- * Similar to the NodeJS EventEmitter. It is specifically meant for subclassing/inheritting from in TypeScript.
+ * Similar to the NodeJS EventEmitter.
  */
 export class EventEmitter<T extends Events<T>> {
-  private readonly internalEmitter = new PublicEventEmitter<T>();
+
+  private listeners: { [K in keyof T]: T[K][] } = {} as any;
+
+  // Dummy variable. We need a public/protected member that includes the type information of T
+  // (as private ones lose type annotations when compiled). If we don't, we lose typechecking when
+  // comparing the types of two emitters because the presence of the emit method breaks typechecking
+  // for some reason.
+  protected typeInfo: { [K in keyof T]: T[K][] } = {} as any;
 
   /**
-   * Adds a handler for an event.
-   * @param event The event to listen to.
-   * @param handler The handler that will be called when the event is fired.
-   * @returns This.
+   * Registers a handler for an event.
    */
-  public on<K extends keyof T>(event: K, handler: T[K]): this {
-    this.internalEmitter.on(event, handler);
+  public on<K extends keyof T>(eventName: K, handler: T[K]): this {
+    const eventHandlers = this.listeners[eventName] == null ? [] as T[K][] : this.listeners[eventName];
+    eventHandlers.push(handler);
+    this.listeners[eventName] = eventHandlers;
     return this;
   }
 
   /**
    * Removes/deregisters an existing handler for an event.
-   * @param event The event that the handler is listening to.
-   * @param handler The handler to remove.
-   * @throws An error if the provided handler could not be found.
-   * @returns This.
    */
-  public off<K extends keyof T>(event: K, handler: T[K]): this {
-    this.internalEmitter.off(event, handler);
+  public off<K extends keyof T>(eventName: K, handler: T[K]): this {
+    if (handler == null) return this;
+
+    const eventHandlers = this.listeners[eventName];
+    const indexOfHandler = eventHandlers.indexOf(handler);
+    if (indexOfHandler === -1) {
+      throw new Error('Handler to remove was not found.');
+    }
+    eventHandlers.splice(indexOfHandler, 1);
     return this;
   }
 
   /**
-   * Raises an event, calling all handlers registered to it with the provided arguments.
-   * @param event The event to raise.
-   * @param args The arguments to pass each handler.
-   * @returns This.
+   * Raises an event, calling all listeners registered to it with the provided arguments.
    */
-  protected emit<K extends keyof T>(event: K, ...args: Parameters<T[K]>): this {
-    this.internalEmitter.emit(event, ...args);
+  public emit<K extends keyof T>(eventName: K, ...args: Parameters<T[K]>): this {
+    const listeners = this.listeners[eventName];
+
+    if (listeners == null) {
+      return this;
+    }
+
+    listeners.forEach((handler: T[keyof T]) => handler(...args));
     return this;
+  }
+
+  /**
+   * Creates a wrapper/delegate method for the `on`/`off` method of this emitter that returns
+   * `self` instead of the `EventEmitter` instance. Useful for exposing the `on`
+   * method without exposing the entire emitter through the original method's self-return value.
+   * @param methodName The method to create a delegate for.
+   * @param self The value that the delegate will return.
+   */
+  public makeDelegate<Self>(methodName: 'on' | 'off', self: Self):
+    <K extends keyof T>(eventName: K, handler: T[K]) => Self;
+  /**
+   * Creates a wrapper/delegate method for the `emit` method of this emitter that returns
+   * `self` instead of the `EventEmitter` instance. Useful for exposing the `on`
+   * method without exposing the entire emitter through the original method's self-return value.
+   * @param methodName The method to create a delegate for.
+   * @param self The value that the delegate will return.
+   */
+  public makeDelegate<Self>(methodName: 'emit', self: Self):
+    <K extends keyof T>(eventName: K, ...args: Parameters<T[K]>) => Self;
+  /**
+   * Creates a wrapper/delegate method for the one of the public methods of this emitter that returns
+   * `self` instead of the `EventEmitter` instance. Useful for exposing the `on`
+   * method without exposing the entire emitter through the original method's self-return value.
+   * @param methodName The method to create a delegate for.
+   * @param self The value that the delegate will return.
+   */
+  public makeDelegate<M extends Exclude<keyof EventEmitter<T>, 'makeDelegate'>, Self>(methodName: M, self: Self) {
+    return (...args: Parameters<EventEmitter<T>[M]>) => {
+      // The cast here is unavoidable because methodName could be any of the methods, which don't
+      // have compatible method signatures (`emit` for example is unique).
+      // As long as an overload is provided, things will typecheck correctly on the client's end,
+      // but the implementation body is unaware of overloads and thus we need this cast
+      // and future make delegate targets will need their own overloads--otherwise
+      // makeDelegate might be uncallable (parameters will be of type never) due to TS attempting
+      // to union the parameter types of all methods, which will be `never` due to lack of overlap.
+      (this[methodName] as any)(...args);
+      return self;
+    }
   }
 
   /**
    * Gets the number of listeners listening to a specific event.
    * @param eventName The event.
    */
-  protected listenerCount(eventName: keyof T): number {
-    return this.internalEmitter.listenerCount(eventName);
+  public listenerCount(eventName: keyof T): number {
+    return this.listeners[eventName] == null ? 0 : this.listeners[eventName].length;
   }
 }
