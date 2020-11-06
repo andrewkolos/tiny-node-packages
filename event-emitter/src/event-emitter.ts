@@ -1,18 +1,13 @@
 
+import { EventSource } from './event-source';
 import { Events } from './events';
 
 /**
  * Similar to the NodeJS EventEmitter.
  */
-export class EventEmitter<T extends Events<T>> {
+export class EventEmitter<T extends Events<T>> implements EventSource<T> {
 
   private listeners: { [K in keyof T]: T[K][] } = {} as any;
-
-  // Dummy variable. We need a public/protected member that includes the type information of T
-  // (as private ones lose type annotations when compiled). If we don't, we lose typechecking when
-  // comparing the types of two emitters because the presence of the emit method breaks typechecking
-  // for some reason.
-  protected typeInfo: { [K in keyof T]: T[K][] } = {} as any;
 
   /**
    * Registers a handler for an event.
@@ -54,6 +49,16 @@ export class EventEmitter<T extends Events<T>> {
   }
 
   /**
+   * A version of this event emitter with the `emit` method hidden.
+   */
+  public asProtected(): EventSource<T> {
+    return {
+      on: this.on.bind(this),
+      off: this.off.bind(this),
+    };
+  };
+
+  /**
    * Creates a wrapper/delegate method for the `on`/`off` method of this emitter that returns
    * `self` instead of the `EventEmitter` instance. Useful for exposing the `on`
    * method without exposing the entire emitter through the original method's self-return value.
@@ -71,6 +76,7 @@ export class EventEmitter<T extends Events<T>> {
    */
   public makeDelegate<Self>(methodName: 'emit', self: Self):
     <K extends keyof T>(eventName: K, ...args: Parameters<T[K]>) => Self;
+
   /**
    * Creates a wrapper/delegate method for the one of the public methods of this emitter that returns
    * `self` instead of the `EventEmitter` instance. Useful for exposing the `on`
@@ -78,7 +84,7 @@ export class EventEmitter<T extends Events<T>> {
    * @param methodName The method to create a delegate for.
    * @param self The value that the delegate will return.
    */
-  public makeDelegate<M extends Exclude<keyof EventEmitter<T>, 'makeDelegate'>, Self>(methodName: M, self: Self) {
+  public makeDelegate<M extends 'on' | 'off' | 'emit', Self>(methodName: M, self: Self) {
     return (...args: Parameters<EventEmitter<T>[M]>) => {
       // The cast here is unavoidable because methodName could be any of the methods, which don't
       // have compatible method signatures (`emit` for example is unique).

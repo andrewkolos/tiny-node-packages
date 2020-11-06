@@ -16,6 +16,14 @@ describe(nameof(EventEmitter), () => {
     }
   });
 
+  it('correctly gives a protected version when asked (hides emit method)', () => {
+    const emitter = new EventEmitter<FooEvents>();
+    const protectedVersion = emitter.asProtected();
+    const asUnprotected = protectedVersion as EventEmitter<FooEvents>;
+
+    expect(() => asUnprotected.emit('num', 0)).toThrow();
+  });
+
   describe('makeDelegate', () => {
     it(`delegate correctly delegates calls to 'on' to the emitter`, () => {
       const expectedSelf = { foo: 3 };

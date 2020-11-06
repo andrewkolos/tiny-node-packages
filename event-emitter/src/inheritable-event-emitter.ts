@@ -1,12 +1,12 @@
 import { EventEmitter } from 'event-emitter';
+import { EventSource } from 'event-source';
 import { Events } from './events';
 
 /**
  * Similar to the NodeJS EventEmitter. It is specifically meant for subclassing/inheritting from in TypeScript.
  */
-export class InheritableEventEmitter<T extends Events<T>> {
+export class InheritableEventEmitter<T extends Events<T>> implements EventSource<T> {
   protected readonly internalEmitter = new EventEmitter<T>();
-
   /**
    * Adds a handler for an event.
    * @param event The event to listen to.
