@@ -1,11 +1,12 @@
 import { EventEmitter } from '../src/event-emitter';
 
 interface FooEvents {
-  num: (fooCount: number) => void;
-  str: (text: string) => void;
-  multi: (fooCount: number, text: string) => void;
+  num: [fooCount: number];
+  str: [text: string];
+  multi: [fooCount: number, text: string];
 }
 
+declare const asbeb: 'num' | 'str' | 'multi';
 describe(nameof(EventEmitter), () => {
 
   it('correctly maintains the count of listeners for events', () => {
@@ -20,7 +21,6 @@ describe(nameof(EventEmitter), () => {
     const emitter = new EventEmitter<FooEvents>();
     const protectedVersion = emitter.asProtected();
     const asUnprotected = protectedVersion as EventEmitter<FooEvents>;
-
     expect(() => asUnprotected.emit('num', 0)).toThrow();
   });
 

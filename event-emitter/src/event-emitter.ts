@@ -7,13 +7,15 @@ import { Events } from './events';
  */
 export class EventEmitter<T extends Events<T>> implements EventSource<T> {
 
-  private listeners: { [K in keyof T]: T[K][] } = {} as any;
+  private listeners: { [K in keyof T]: Array<(...args: T[K]) => void> } = {} as any;
 
   /**
    * Registers a handler for an event.
    */
-  public on<K extends keyof T>(eventName: K, handler: T[K]): this {
-    const eventHandlers = this.listeners[eventName] == null ? [] as T[K][] : this.listeners[eventName];
+  public on<K extends keyof T>(eventName: K, handler: (...args: T[K]) => void): this {
+    const eventHandlers = this.listeners[eventName] == null ?
+      [] as Array<(...args: T[K]) => void>
+      : this.listeners[eventName];
     eventHandlers.push(handler);
     this.listeners[eventName] = eventHandlers;
     return this;
@@ -22,7 +24,7 @@ export class EventEmitter<T extends Events<T>> implements EventSource<T> {
   /**
    * Removes/deregisters an existing handler for an event.
    */
-  public off<K extends keyof T>(eventName: K, handler: T[K]): this {
+  public off<K extends keyof T>(eventName: K, handler: (...args: T[K]) => void): this {
     if (handler == null) return this;
 
     const eventHandlers = this.listeners[eventName];
@@ -37,14 +39,14 @@ export class EventEmitter<T extends Events<T>> implements EventSource<T> {
   /**
    * Raises an event, calling all listeners registered to it with the provided arguments.
    */
-  public emit<K extends keyof T>(eventName: K, ...args: Parameters<T[K]>): this {
+  public emit<K extends keyof T>(eventName: K, ...args: T[K]): this {
     const listeners = this.listeners[eventName];
 
     if (listeners == null) {
       return this;
     }
 
-    listeners.forEach((handler: T[keyof T]) => handler(...args));
+    listeners.forEach((handler: (...args: T[K]) => void) => handler(...args));
     return this;
   }
 
@@ -66,7 +68,7 @@ export class EventEmitter<T extends Events<T>> implements EventSource<T> {
    * @param self The value that the delegate will return.
    */
   public makeDelegate<Self>(methodName: 'on' | 'off', self: Self):
-    <K extends keyof T>(eventName: K, handler: T[K]) => Self;
+    <K extends keyof T>(eventName: K, handler: (...args: T[K]) => void) => Self;
   /**
    * Creates a wrapper/delegate method for the `emit` method of this emitter that returns
    * `self` instead of the `EventEmitter` instance. Useful for exposing the `on`
@@ -75,7 +77,7 @@ export class EventEmitter<T extends Events<T>> implements EventSource<T> {
    * @param self The value that the delegate will return.
    */
   public makeDelegate<Self>(methodName: 'emit', self: Self):
-    <K extends keyof T>(eventName: K, ...args: Parameters<T[K]>) => Self;
+    <K extends keyof T>(eventName: K, ...args: T[K]) => Self;
 
   /**
    * Creates a wrapper/delegate method for the one of the public methods of this emitter that returns
