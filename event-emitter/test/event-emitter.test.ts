@@ -6,7 +6,6 @@ interface FooEvents {
   multi: [fooCount: number, text: string];
 }
 
-declare const asbeb: 'num' | 'str' | 'multi';
 describe(nameof(EventEmitter), () => {
 
   it('correctly maintains the count of listeners for events', () => {
@@ -60,7 +59,7 @@ describe(nameof(EventEmitter), () => {
 
       const listener = jest.fn();
       emitter.on('num', listener);
-      const self = (emit as any)('num', 1);
+      const self = emit('num', 1);
 
       expect(listener).toBeCalledTimes(1);
       expect(self).toBe(expectedSelf);
