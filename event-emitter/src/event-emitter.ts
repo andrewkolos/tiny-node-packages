@@ -1,7 +1,7 @@
 
 import { EventSource } from './event-source';
 import { Events } from './events';
-
+import { UnionToIntersection } from './union-to-intersection';
 /**
  * Similar to the NodeJS EventEmitter.
  */
@@ -39,14 +39,16 @@ export class EventEmitter<T extends Events<T>> implements EventSource<T> {
   /**
    * Raises an event, calling all listeners registered to it with the provided arguments.
    */
-  public emit<K extends keyof T>(eventName: K, ...args: T[K]): this {
+  // We need UnionToIntersection for the case where K is a union of strings.
+  // @ts-ignore TS thinks UnionToIntersection doesn't produce an array here.
+  public emit<K extends keyof T>(eventName: K, ...args: UnionToIntersection<T[K]>): this {
     const listeners = this.listeners[eventName];
 
     if (listeners == null) {
       return this;
     }
 
-    listeners.forEach((handler: (...args: T[K]) => void) => handler(...args));
+    listeners.forEach((handler: (...args: T[K]) => void) => handler(...args as any));
     return this;
   }
 
