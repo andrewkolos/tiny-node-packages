@@ -1,20 +1,20 @@
 
 import { EventSource } from './event-source';
 import { Events } from './events';
-import { UnionToIntersection } from './union-to-intersection';
+import { Handler, HandlerParams } from './handler';
 /**
  * Similar to the NodeJS EventEmitter.
  */
 export class EventEmitter<T extends Events<T>> implements EventSource<T> {
 
-  private listeners: { [K in keyof T]: Array<(...args: T[K]) => void> } = {} as any;
+  private listeners: { [K in keyof T]: Handler<T, K>[] } = {} as any;
 
   /**
    * Registers a handler for an event.
    */
-  public on<K extends keyof T>(eventName: K, handler: (...args: T[K]) => void): this {
+  public on<K extends keyof T>(eventName:K, handler: Handler<T, K>): this {
     const eventHandlers = this.listeners[eventName] == null ?
-      [] as Array<(...args: T[K]) => void>
+      [] as Handler<T, K>[]
       : this.listeners[eventName];
     eventHandlers.push(handler);
     this.listeners[eventName] = eventHandlers;
@@ -24,7 +24,7 @@ export class EventEmitter<T extends Events<T>> implements EventSource<T> {
   /**
    * Removes/deregisters an existing handler for an event.
    */
-  public off<K extends keyof T>(eventName: K, handler: (...args: T[K]) => void): this {
+  public off<K extends keyof T>(eventName: K, handler: Handler<T, K>): this {
     if (handler == null) return this;
 
     const eventHandlers = this.listeners[eventName];
@@ -41,14 +41,14 @@ export class EventEmitter<T extends Events<T>> implements EventSource<T> {
    */
   // We need UnionToIntersection for the case where K is a union of strings.
   // @ts-ignore TS thinks UnionToIntersection doesn't produce an array here.
-  public emit<K extends keyof T>(eventName: K, ...args: UnionToIntersection<T[K]>): this {
+  public emit<K extends keyof T>(eventName: K, ...args: HandlerParams<T, K>): this {
     const listeners = this.listeners[eventName];
 
     if (listeners == null) {
       return this;
     }
 
-    listeners.forEach((handler: (...args: T[K]) => void) => handler(...args as any));
+    listeners.forEach((handler: Handler<T, K>) => handler(...args));
     return this;
   }
 
@@ -70,7 +70,7 @@ export class EventEmitter<T extends Events<T>> implements EventSource<T> {
    * @param self The value that the delegate will return.
    */
   public makeDelegate<Self>(methodName: 'on' | 'off', self: Self):
-    <K extends keyof T>(eventName: K, handler: (...args: T[K]) => void) => Self;
+    <K extends keyof T>(eventName: K, handler: Handler<T, K>) => Self;
   /**
    * Creates a wrapper/delegate method for the `emit` method of this emitter that returns
    * `self` instead of the `EventEmitter` instance. Useful for exposing the `on`
@@ -79,7 +79,7 @@ export class EventEmitter<T extends Events<T>> implements EventSource<T> {
    * @param self The value that the delegate will return.
    */
   public makeDelegate<Self>(methodName: 'emit', self: Self):
-    <K extends keyof T>(eventName: K, ...args: T[K]) => Self;
+    <K extends keyof T>(eventName: K, ...args: HandlerParams<T, K>) => Self;
 
   /**
    * Creates a wrapper/delegate method for the one of the public methods of this emitter that returns

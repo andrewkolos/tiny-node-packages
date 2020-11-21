@@ -1,6 +1,7 @@
 import { EventEmitter } from './event-emitter';
 import { EventSource } from './event-source';
 import { Events } from './events';
+import { Handler, HandlerParams} from './handler';
 
 /**
  * Similar to the NodeJS EventEmitter. It is specifically meant for subclassing/inheritting from in TypeScript.
@@ -13,7 +14,7 @@ export class InheritableEventEmitter<T extends Events<T>> implements EventSource
    * @param handler The handler that will be called when the event is fired.
    * @returns This.
    */
-  public on<K extends keyof T>(event: K, handler: (...args: T[K]) => void): this {
+  public on<K extends keyof T>(event: K, handler: Handler<T, K>): this {
     this.internalEmitter.on(event, handler);
     return this;
   }
@@ -25,7 +26,7 @@ export class InheritableEventEmitter<T extends Events<T>> implements EventSource
    * @throws An error if the provided handler could not be found.
    * @returns This.
    */
-  public off<K extends keyof T>(event: K, handler: (...args: T[K]) => void): this {
+  public off<K extends keyof T>(event: K, handler: Handler<T, K>): this {
     this.internalEmitter.off(event, handler);
     return this;
   }
@@ -36,7 +37,7 @@ export class InheritableEventEmitter<T extends Events<T>> implements EventSource
    * @param args The arguments to pass each handler.
    * @returns This.
    */
-  protected emit<K extends keyof T>(event: K, ...args: T[K]): this {
+  protected emit<K extends keyof T>(event: K, ...args: HandlerParams<T, K>): this {
     this.internalEmitter.emit(event, ...args);
     return this;
   }
