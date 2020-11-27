@@ -1,0 +1,45 @@
+{
+  "name": "@akolos/object-promise-all",
+  "version": "0.0.1",
+  "main": "build/cjs/index.js",
+  "module": "build/index.js",
+  "types": "build/index.d.ts",
+  "type": "module",
+  "scripts": {
+    "start": "node build/cjs/index.js",
+    "clean": "rm -rf build",
+    "quick": "npm run clean && npm run build && npm run start",
+    "build": "npm run clean && tsc && tsc --m commonjs --outDir build/cjs/ --declaration false",
+    "build:watch": "npm run clean && tsc -w && tsc --outDir build/cjs --m commonjs --declaraton false",
+    "test": "jest --verbose",
+    "test:watch": "jest --watch",
+    "test:debug": "node --inspect-brk=0.0.0.0 node_modules/jest/bin/jest.js --runInBand --config jest.config.js",
+    "publish": "npm run build && npm publish --access=public"
+  },
+  "keywords": [
+    "TypeScript",
+    "Promise"
+  ],
+  "author": "Andrew Kolos <andrewrkolos@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "ts-nameof": "^4.2.2"
+  },
+  "devDependencies": {
+    "@types/jest": "^25.2.1",
+    "@types/node": "^13.11.1",
+    "@types/ts-nameof": "^4.2.1",
+    "jest": "^25.3.0",
+    "ts-jest": "^25.3.1",
+    "ts-node": "^8.10.2",
+    "ts-node-register": "^1.0.0",
+    "tslint": "^6.1.1",
+    "tslint-clean-code": "^0.2.10",
+    "typescript": "^4.1.2"
+  },
+  "description": "A strongly typed Promise.all-like function that works on objects that has promises as some of its properties.",
+  "engines": {
+    "node": "8.9.3",
+    "npm": "5.6.0"
+  }
+}
