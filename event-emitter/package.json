@@ -1,6 +1,6 @@
 {
   "name": "@akolos/event-emitter",
-  "version": "2.0.1",
+  "version": "2.0.3",
   "main": "build/cjs/index.js",
   "module": "build/index.js",
   "types": "build/index.d.ts",
@@ -15,7 +15,12 @@
     "test:debug": "node --inspect-brk=0.0.0.0 node_modules/jest/bin/jest.js --runInBand --config jest.config.js",
     "publish": "npm run build && npm publish --access=public"
   },
-  "keywords": [],
+  "keywords": [
+    "EventEmitter",
+    "typed",
+    "TypeScript"
+  ],
+  "homepage": "https://github.com/andrewkolos/tiny-node-packages/tree/master/event-emitter",
   "author": "",
   "license": "ISC",
   "dependencies": {
