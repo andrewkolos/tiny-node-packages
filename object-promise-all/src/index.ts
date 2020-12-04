@@ -28,7 +28,7 @@ export function objectPromiseAll<T extends PromisesMap<T>>(promisesMap: T): Prom
     return results.reduce((resolved, result, index) => {
       resolved[keys[index]] = result;
       return resolved;
-    }, {});
+    }, Array.isArray(promisesMap) ? [] : {});
   });
 }
 
@@ -43,3 +43,5 @@ function isPromise<T, S>(obj: PromiseLike<T> | S): obj is PromiseLike<T> {
 function isNonPromiseObject(obj: unknown): boolean {
   return typeof obj === 'object' && !isPromise(obj);
 }
+
+export default objectPromiseAll;
