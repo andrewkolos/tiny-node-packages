@@ -1,6 +1,6 @@
 {
   "name": "@akolos/custom-error",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "main": "build/cjs/index.js",
   "module": "build/index.js",
   "types": "build/index.d.ts",
@@ -34,9 +34,5 @@
     "tslint-clean-code": "^0.2.10",
     "typescript": "^3.8.3"
   },
-  "description": "",
-  "engines": {
-    "node": "8.9.3",
-    "npm": "5.6.0"
-  }
+  "description": ""
 }

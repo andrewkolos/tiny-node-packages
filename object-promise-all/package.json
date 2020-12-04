@@ -1,6 +1,6 @@
 {
   "name": "@akolos/object-promise-all",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "main": "build/cjs/index.js",
   "module": "build/index.js",
   "types": "build/index.d.ts",
@@ -37,9 +37,5 @@
     "tslint-clean-code": "^0.2.10",
     "typescript": "^4.1.2"
   },
-  "description": "A strongly typed Promise.all-like function that works on objects that has promises as some of its properties.",
-  "engines": {
-    "node": "8.9.3",
-    "npm": "5.6.0"
-  }
+  "description": "A strongly typed Promise.all-like function that works on objects that has promises as some of its properties."
 }

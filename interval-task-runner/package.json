@@ -1,6 +1,6 @@
 {
   "name": "@akolos/interval-task-runner",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "main": "build/es5/index.js",
   "module": "build/index.js",
   "types": "build/index.d.ts",
@@ -36,9 +36,5 @@
     "typedoc-plugin-markdown": "^2.1.9",
     "typescript": "^3.5.3"
   },
-  "description": "Repeatedly executes a function with a minimum time delay between reach call (with millisecond precision). Written in TypeScript.",
-  "engines": {
-    "node": "8.9.3",
-    "npm": "5.6.0"
-  }
+  "description": "Repeatedly executes a function with a minimum time delay between reach call (with millisecond precision). Written in TypeScript."
 }
