@@ -12,7 +12,7 @@ export class EventEmitter<T extends Events<T>> implements EventSource<T> {
   /**
    * Registers a handler for an event.
    */
-  public on<K extends keyof T>(eventName:K, handler: Handler<T, K>): this {
+  public on<K extends keyof T>(eventName: K, handler: Handler<T, K>): this {
     const eventHandlers = this.listeners[eventName] == null ?
       [] as Handler<T, K>[]
       : this.listeners[eventName];
@@ -27,7 +27,7 @@ export class EventEmitter<T extends Events<T>> implements EventSource<T> {
   public off<K extends keyof T>(eventName: K, handler: Handler<T, K>): this {
     if (handler == null) return this;
 
-    const eventHandlers = this.listeners[eventName];
+    const eventHandlers = this.listeners[eventName] ?? [];
     const indexOfHandler = eventHandlers.indexOf(handler);
     if (indexOfHandler === -1) {
       throw new Error('Handler to remove was not found.');

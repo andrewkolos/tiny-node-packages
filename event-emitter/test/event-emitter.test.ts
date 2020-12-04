@@ -23,6 +23,11 @@ describe(nameof(EventEmitter), () => {
     expect(() => asUnprotected.emit('num', 0)).toThrow();
   });
 
+  it('properly errors when off is called before any handler is registered', () => { 
+    const emitter = new EventEmitter<FooEvents>();
+    expect(() => emitter.off('num', () => { })).toThrowError('Handler to remove was not found.');
+  });
+
   describe('makeDelegate', () => {
     it(`delegate correctly delegates calls to 'on' to the emitter`, () => {
       const expectedSelf = { foo: 3 };
