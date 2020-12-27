@@ -9,7 +9,7 @@
     "doc": "typedoc --theme markdown --excludeExternals --excludePrivate --excludeNotExported",
     "test": "jest --verbose --forceExit",
     "test:debug": "node --inspect-brk=0.0.0.0 node_modules/jest/bin/jest.js --runInBand --config jest.config.js --forceExit",
-    "publish": "npm publish --access=public"
+    "pub": "npm publish --access=public"
   },
   "keywords": [],
   "author": "Andrew Kolos",

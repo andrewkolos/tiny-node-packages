@@ -13,7 +13,7 @@
     "test": "jest --verbose",
     "test:watch": "jest --watch",
     "test:debug": "node --inspect-brk=0.0.0.0 node_modules/jest/bin/jest.js --runInBand --config jest.config.js",
-    "publish": "npm run build && npm publish --access=public"
+    "pub":  "npm run build && npm publish --access=public"
   },
   "keywords": [],
   "author": "",
