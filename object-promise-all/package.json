@@ -1,6 +1,6 @@
 {
   "name": "@akolos/object-promise-all",
-  "version": "0.0.7",
+  "version": "1.0.0",
   "main": "build/cjs/index.js",
   "module": "build/index.js",
   "types": "build/index.d.ts",
@@ -14,7 +14,7 @@
     "test": "jest --verbose",
     "test:watch": "jest --watch",
     "test:debug": "node --inspect-brk=0.0.0.0 node_modules/jest/bin/jest.js --runInBand --config jest.config.js",
-    "pub":  "npm run build && npm publish --access=public"
+    "pub": "npm run build && npm publish --access=public"
   },
   "keywords": [
     "TypeScript",
@@ -35,7 +35,7 @@
     "ts-node-register": "^1.0.0",
     "tslint": "^6.1.1",
     "tslint-clean-code": "^0.2.10",
-    "typescript": "^4.1.2"
+    "typescript": "^4.2.3"
   },
   "description": "A strongly typed Promise.all-like function that works on objects that has promises as some of its properties."
 }

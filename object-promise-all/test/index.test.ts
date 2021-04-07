@@ -1,6 +1,7 @@
 import { objectPromiseAll } from '../src/index';
 
 describe(nameof(objectPromiseAll), () => {
+
   it('works on basic shallow objects', async (done) => {
     const obj = {
       prop1: Promise.resolve('prop1'),
@@ -97,10 +98,74 @@ describe(nameof(objectPromiseAll), () => {
 
     expect(resolved).toEqual({
       prop1: 'prop1',
-      arr: ['prop2', {prop3: 'prop3'}],
+      arr: ['prop2', { prop3: 'prop3' }],
       notAPromise: 'prop4',
     });
 
+    expect(resolved.arr.push())
+
     done();
+  });
+
+  it('ignores functions', async (done) => {
+
+    const date = new Date();
+    const obj = {
+      get getter() { return 2 },
+      date,
+      noFunctions: {
+        a: 1,
+        b: 2
+      },
+      func: () => 3
+    };
+
+    const resolved = await objectPromiseAll(obj);
+
+    expect((resolved as typeof obj).func).toBeUndefined();
+    expect(resolved).toEqual({
+      getter: 2,
+      date: {},
+      noFunctions: {
+        a: 1,
+        b: 2
+      }
+    });
+
+    done();
+  });
+
+  it('should error for function input', async (done) => {
+    const fn = () => 3;
+
+    await expect(objectPromiseAll(fn)).rejects.toThrow();
+
+    done();
+
+    if (false) {
+      // @ts-ignore
+      const _f = await objectPromiseAll(fn); // For checking return type.
+    }
+  });
+
+  it('should error for a bare promise', async (done) => {
+    const p = Promise.resolve('s');
+    await expect(objectPromiseAll(p)).rejects.toThrow();
+
+    done();
+
+    // @ts-ignore
+    if (false) {
+      // @ts-ignore
+      const _f = await objectPromiseAll(p); // For checking return type.
+    }
+  });
+
+  it('ignores functions at top level of array input', async () => {
+    const obj = [1, () => 2];
+
+    const resolved = await objectPromiseAll(obj);
+
+    expect(resolved).toEqual([1]);
   });
 });

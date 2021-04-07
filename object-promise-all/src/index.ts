@@ -1,12 +1,32 @@
 export type PromisesMap<T> = {
-  [P in keyof T]: T[P] extends Promise<any> ? T[P] : T[P] extends object ? PromisesMap<T[P]> : T[P];
+  [P in keyof T]: T[P] extends Promise<any> ? T[P] :
+  T[P] extends object ? PromisesMap<T[P]> :
+  T[P];
 };
 
-export type DePromiseProps<T extends PromisesMap<any>> = T extends PromisesMap<infer U>
-  ? {
-    [P in keyof U]: U[P] extends Promise<infer PR> ? PR : U[P] extends object ? DePromiseProps<U[P]> : U[P];
-  }
-  : never;
+export type DePromiseProps<T> = ExpandRecursively<FilterNever<_DePromisePropsStart<T>>>;
+
+type _DePromisePropsStart<T> = T extends Promise<any> ? never : _DePromiseProps<T>;
+
+type _DePromiseProps<T> = ExpandRecursively<FilterNever<
+  T extends Promise<infer P> ? P : (
+    T extends Array<infer A> ? Array<_DePromiseProps<A>> : (
+      IsFunction<T> extends true ? never : (
+        T extends object ? { [K in keyof T]: _DePromiseProps<T[K]>; } : T
+      )
+    )
+  )
+>>;
+
+type IsFunction<T> = T extends (...args: any) => any ? true : false;
+
+type FilterNever<T> = T extends Array<any> ? T : T extends object
+  ? T extends infer O ? { [K in keyof O as O[K] extends never ? never : K]: O[K] } : never : T;
+
+type ExpandRecursively<T> = T extends object
+  ? T extends infer O ? { [K in keyof O]: ExpandRecursively<O[K]> } : never
+  : T;
+
 
 /**
  * Resolves all properties found within an object. Works recursively.
@@ -14,7 +34,7 @@ export type DePromiseProps<T extends PromisesMap<any>> = T extends PromisesMap<i
  * @return {Promise<T>} A promise that resolves to a version of the object with all promises within resolved.
  */
 export function objectPromiseAll<T extends PromisesMap<T>>(promisesMap: T): Promise<DePromiseProps<T>> {
-  if (promisesMap === null || typeof promisesMap !== 'object') {
+  if (promisesMap === null || typeof promisesMap !== 'object' || promisesMap instanceof Promise) {
     return Promise.reject(new TypeError('The input argument must be of type object'));
   }
 
@@ -26,7 +46,9 @@ export function objectPromiseAll<T extends PromisesMap<T>>(promisesMap: T): Prom
 
   return Promise.all(promises).then((results) => {
     return results.reduce((resolved, result, index) => {
-      resolved[keys[index]] = result;
+      if ((typeof result !== 'function')) {
+        resolved[keys[index]] = result;
+      }
       return resolved;
     }, Array.isArray(promisesMap) ? [] : {});
   });
