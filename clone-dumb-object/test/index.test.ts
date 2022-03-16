@@ -1,6 +1,6 @@
 import { cloneDumbObject, compareDumbObjects } from '../src/index';
 
-describe(nameof(cloneDumbObject), () => {
+describe('cloneDumbObject', () => {
   it('clones a valid dumb object accurately', () => {
     const object = {
       string: 'foo',
@@ -38,7 +38,7 @@ describe(nameof(cloneDumbObject), () => {
   });
 });
 
-describe(nameof(compareDumbObjects), () => {
+describe('compareDumbObjects', () => {
   it('errors when object contains a function', () => {
     const object = {
       foo: 1,

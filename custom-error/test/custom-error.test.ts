@@ -10,7 +10,7 @@ class MyTestError extends CustomError {
   }
 }
 
-describe(nameof(CustomError), () => {
+describe('CustomError', () => {
   it('using instanceof to detect error type works', () => {
     try {
       throw new MyTestError('test');

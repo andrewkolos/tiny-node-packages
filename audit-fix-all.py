@@ -8,8 +8,10 @@ dirs = (d.name for d in os.scandir(cwd) if d.is_dir() and d.name[0] != '.')
 
 for d in dirs:
   os.chdir(d)
-  auditResult = subprocess.run('npm audit fix', shell=True, capture_output=True)
-  if re.search('fixed 0 of 0 vulnerabilities') continue
+  auditResult = subprocess.run('npm audit fix', shell=True, capture_output=True, text=True)
+  if auditResult.stdout.find('fixed 0 of 0 vulnerabilities'):
+    os.chdir('..')
+    continue
   with open('package.json', 'r+') as f:
     pattern = re.compile(r'("version": "\d+\.\d+\.)(\d+)(")')
     fileContent = f.read()

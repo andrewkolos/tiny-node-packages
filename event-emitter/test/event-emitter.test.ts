@@ -6,7 +6,7 @@ interface FooEvents {
   multi: [fooCount: number, text: string];
 }
 
-describe(nameof(EventEmitter), () => {
+describe('EventEmitter', () => {
 
   it('correctly maintains the count of listeners for events', () => {
     const emitter = new EventEmitter<FooEvents>();

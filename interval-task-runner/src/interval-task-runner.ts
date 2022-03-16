@@ -9,7 +9,7 @@ export class IntervalTaskRunner {
   private running: boolean = false;
 
   /**
-   * @param task The task to be ran every time the interval ellapses.
+   * @param task The task to be ran every time the interval elapses.
    * @param interval The intervening time between `task` calls.
    */
   public constructor(private readonly task: () => void, private readonly interval: Interval) { }

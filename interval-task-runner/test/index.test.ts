@@ -1,9 +1,7 @@
 import { IntervalTaskRunner, Interval } from '../src/index';
 
-jest.useRealTimers();
-
-describe(nameof(IntervalTaskRunner), () => {
-  it('should not run the task before the specified interval occurrs', (done) => {
+describe('IntervalTaskRunner', () => {
+  it('should not run the task before the specified interval occurs', (done) => {
 
     const interval = Interval.fromHz(20);
     let lastCallAt = new Date().getTime();
@@ -25,11 +23,13 @@ describe(nameof(IntervalTaskRunner), () => {
 
   it('should run the task the correct number of times within a given timespan', (done) => {
     const allowedMissingRuns = 1;
-    const numberOfRuns = 30;
+    const numberOfRuns = 20;
 
-    const interval = Interval.fromHz(50);
+    const interval = Interval.fromHz(10);
     let counter = 0;
-    const count = () => counter += 1;
+    const count = () => {
+      counter += 1;
+    }
 
     new IntervalTaskRunner(count, interval).start();
 

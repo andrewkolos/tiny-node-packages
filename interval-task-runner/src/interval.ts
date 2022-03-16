@@ -4,7 +4,7 @@
 export class Interval {
 
   /**
-   * Creates an `Interval` from a number of milliseconds that comprsises it.
+   * Creates an `Interval` from a number of milliseconds that comprises it.
    * @param ms The number of milliseconds that represents the interval.
    */
   public static fromMs(ms: number) {
@@ -12,8 +12,8 @@ export class Interval {
   }
 
   /**
-   * Creates an `Interval` from the number of times this interval would ellapse within the span of a second.
-   * @param hz The number of times this interval would ellapse within the span of a second.
+   * Creates an `Interval` from the number of times this interval would elapse within the span of a second.
+   * @param hz The number of times this interval would elapse within the span of a second.
    */
   public static fromHz(hz: number) {
     return new Interval(1000 / hz);

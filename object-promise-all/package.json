@@ -1,6 +1,6 @@
 {
   "name": "@akolos/object-promise-all",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "main": "build/cjs/index.js",
   "module": "build/index.js",
   "types": "build/index.d.ts",
@@ -14,7 +14,7 @@
     "test": "jest --verbose",
     "test:watch": "jest --watch",
     "test:debug": "node --inspect-brk=0.0.0.0 node_modules/jest/bin/jest.js --runInBand --config jest.config.js",
-    "pub": "npm run build && npm publish --access=public"
+    "pub": "npm t && npm run build && npm publish --access=public"
   },
   "keywords": [
     "TypeScript",
@@ -22,20 +22,16 @@
   ],
   "author": "Andrew Kolos <andrewrkolos@gmail.com>",
   "license": "MIT",
-  "dependencies": {
-    "ts-nameof": "^4.2.2"
-  },
   "devDependencies": {
-    "@types/jest": "^25.2.1",
+    "@types/jest": "^27.4.1",
     "@types/node": "^13.11.1",
-    "@types/ts-nameof": "^4.2.1",
-    "jest": "^25.3.0",
-    "ts-jest": "^25.3.1",
+    "jest": "^27.5.1",
+    "ts-jest": "^27.1.3",
     "ts-node": "^8.10.2",
     "ts-node-register": "^1.0.0",
     "tslint": "^6.1.1",
     "tslint-clean-code": "^0.2.10",
-    "typescript": "^4.2.3"
+    "typescript": "^4.6.2"
   },
-  "description": "A strongly typed Promise.all-like function that works on objects that has promises as some of its properties."
+  "description": "A typed Promise.all-like function that works on objects that has promises as some of its properties."
 }

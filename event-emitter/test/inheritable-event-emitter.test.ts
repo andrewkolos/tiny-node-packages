@@ -27,7 +27,7 @@ class ObservableFooer extends InheritableEventEmitter<FooEvents> {
   }
 }
 
-describe(nameof(InheritableEventEmitter), () => {
+describe('InheritableEventEmitter', () => {
   it('calls a listener listening to a specific event when it is fired', () => {
     const fooer = new ObservableFooer();
     const fn = jest.fn();

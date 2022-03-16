@@ -1,8 +1,8 @@
 import { objectPromiseAll } from '../src/index';
 
-describe(nameof(objectPromiseAll), () => {
+describe('objectPromiseAll', () => {
 
-  it('works on basic shallow objects', async (done) => {
+  it('works on basic shallow objects', async () => {
     const obj = {
       prop1: Promise.resolve('prop1'),
       prop2: Promise.resolve('prop2'),
@@ -12,11 +12,10 @@ describe(nameof(objectPromiseAll), () => {
 
     expect(resolved.prop1).toEqual('prop1');
     expect(resolved.prop2).toEqual('prop2');
-
-    done();
+    expect.assertions(2)
   });
 
-  it('works on objects containing non-promises', async (done) => {
+  it('works on objects containing non-promises', async () => {
     const obj = {
       prop1: 'prop1',
       prop2: Promise.resolve('prop2'),
@@ -26,11 +25,11 @@ describe(nameof(objectPromiseAll), () => {
 
     expect(resolved.prop1).toEqual('prop1');
     expect(resolved.prop2).toEqual('prop2');
-
-    done();
+    
+    expect.assertions(2)
   });
 
-  it('works on deep objects', async (done) => {
+  it('works on deep objects', async () => {
     const obj = {
       prop1: 'prop1',
       prop2: Promise.resolve('prop2'),
@@ -49,10 +48,10 @@ describe(nameof(objectPromiseAll), () => {
       prop5: 'prop5',
     });
 
-    done();
+    expect.assertions(3)
   });
 
-  it('works on arrays', async (done) => {
+  it('works on arrays', async () => {
     const obj: [Promise<string>, Promise<string>, string] =
       [Promise.resolve('prop1'), Promise.resolve('prop2'), 'prop3'];
 
@@ -64,25 +63,22 @@ describe(nameof(objectPromiseAll), () => {
 
     expect(Array.isArray(resolved)).toBe(true);
 
-    done();
+    expect.assertions(4)
   });
 
-  it('works on objects containing arrays', async (done) => {
+  it('works on objects containing arrays', () => {
     const obj = {
       arr1: [Promise.resolve('prop1'), Promise.resolve('prop2')],
       notArr: Promise.resolve('prop3'),
     };
-    const resolved = await objectPromiseAll(obj);
 
-    expect(resolved).toEqual({
+    return expect(objectPromiseAll(obj)).resolves.toEqual({
       arr1: ['prop1', 'prop2'],
       notArr: 'prop3',
     });
-
-    done();
   });
 
-  it('works on arrays containing objects', async (done) => {
+  it('works on arrays containing objects', async () => {
     const obj = {
       prop1: Promise.resolve('prop1'),
       arr: [
@@ -102,12 +98,10 @@ describe(nameof(objectPromiseAll), () => {
       notAPromise: 'prop4',
     });
 
-    expect(resolved.arr.push())
-
-    done();
+    expect.assertions(1)
   });
 
-  it('ignores functions', async (done) => {
+  it('ignores functions', async () => {
 
     const date = new Date();
     const obj = {
@@ -131,28 +125,24 @@ describe(nameof(objectPromiseAll), () => {
         b: 2
       }
     });
-
-    done();
+    expect.assertions(2)
   });
 
-  it('should error for function input', async (done) => {
+  it('should error for function input', async () => {
     const fn = () => 3;
 
-    await expect(objectPromiseAll(fn)).rejects.toThrow();
+    return expect(objectPromiseAll(fn)).rejects.toThrow();
 
-    done();
-
+    // @ts-ignore
     if (false) {
       // @ts-ignore
       const _f = await objectPromiseAll(fn); // For checking return type.
     }
   });
 
-  it('should error for a bare promise', async (done) => {
+  it('should error for a bare promise', async () => {
     const p = Promise.resolve('s');
-    await expect(objectPromiseAll(p)).rejects.toThrow();
-
-    done();
+    return expect(objectPromiseAll(p)).rejects.toThrow();
 
     // @ts-ignore
     if (false) {
@@ -166,6 +156,6 @@ describe(nameof(objectPromiseAll), () => {
 
     const resolved = await objectPromiseAll(obj);
 
-    expect(resolved).toEqual([1]);
+    return expect(resolved).toEqual([1]);
   });
 });

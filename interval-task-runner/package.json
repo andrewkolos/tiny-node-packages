@@ -1,6 +1,6 @@
 {
   "name": "@akolos/interval-task-runner",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "main": "build/es5/index.js",
   "module": "build/index.js",
   "types": "build/index.d.ts",
@@ -9,7 +9,7 @@
     "doc": "typedoc --theme markdown --excludeExternals --excludePrivate --excludeNotExported",
     "test": "jest --verbose --forceExit",
     "test:debug": "node --inspect-brk=0.0.0.0 node_modules/jest/bin/jest.js --runInBand --config jest.config.js --forceExit",
-    "pub": "npm publish --access=public"
+    "pub": "npm t && npm run build && npm publish --access=public"
   },
   "keywords": [],
   "author": "Andrew Kolos",
@@ -17,24 +17,20 @@
     "url": "https://github.com/andrewkolos/tiny-node-packages/tree/master/interval-task-runner"
   },
   "license": "MIT",
-  "dependencies": {
-    "@types/dedent": "^0.7.0",
-    "@types/read": "0.0.28",
-    "ts-nameof": "^3.2.0"
-  },
   "devDependencies": {
-    "@types/jest": "^24.0.15",
+    "@types/dedent": "^0.7.0",
+    "@types/jest": "^27.4.1",
     "@types/node": "^12.6.8",
-    "@types/ts-nameof": "^3.2.0",
-    "jest": "^24.9.0",
+    "@types/read": "^0.0.29",
+    "jest": "^27.5.1",
     "jsdoc-to-markdown": "^5.0.1",
-    "ts-jest": "^24.0.2",
+    "ts-jest": "^27.1.3",
     "ts-node-register": "^1.0.0",
     "tslint": "^5.18.0",
     "tslint-clean-code": "^0.2.9",
     "typedoc": "^0.15.0",
     "typedoc-plugin-markdown": "^2.1.9",
-    "typescript": "^3.5.3"
+    "typescript": "^4.6.2"
   },
   "description": "Repeatedly executes a function with a minimum time delay between reach call (with millisecond precision). Written in TypeScript."
 }
