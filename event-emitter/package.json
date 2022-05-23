@@ -1,6 +1,6 @@
 {
   "name": "@akolos/event-emitter",
-  "version": "2.0.7",
+  "version": "3.0.0",
   "main": "build/cjs/index.js",
   "module": "build/index.js",
   "types": "build/index.d.ts",
@@ -21,10 +21,11 @@
     "TypeScript"
   ],
   "homepage": "https://github.com/andrewkolos/tiny-node-packages/tree/master/event-emitter",
-  "author": "",
-  "license": "ISC",
+  "author": "andrewkolos",
+  "license": "MIT",
   "dependencies": {
     "@akolos/custom-error": "0.0.1",
+    "audit": "^0.0.6",
     "dedent": "^0.7.0"
   },
   "devDependencies": {
@@ -39,7 +40,7 @@
     "ts-toolbelt": "^6.13.34",
     "tslint": "^6.1.1",
     "tslint-clean-code": "^0.2.10",
-    "typescript": "^4.1.1-rc"
+    "typescript": "^4.6.4"
   },
   "description": "",
   "engines": {

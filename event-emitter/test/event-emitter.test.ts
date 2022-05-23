@@ -1,9 +1,9 @@
 import { EventEmitter } from '../src/event-emitter';
 
 interface FooEvents {
-  num: [fooCount: number];
-  str: [text: string];
-  multi: [fooCount: number, text: string];
+  num: (fooCount: number) => void;
+  str: (text: string) => void;
+  multi: (fooCount: number, text: string) => void;
 }
 
 describe('EventEmitter', () => {

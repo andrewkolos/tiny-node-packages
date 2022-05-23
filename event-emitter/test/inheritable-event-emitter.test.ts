@@ -1,9 +1,9 @@
 import { InheritableEventEmitter } from '../src/inheritable-event-emitter';
 
 interface FooEvents {
-  foo: [fooCount: number];
-  broadcast: [text: string];
-  multi: [fooCount: number, text: string];
+  foo: (fooCount: number) => void;
+  broadcast: (text: string) => void;
+  multi: (fooCount: number, text: string) => void;
 }
 
 class ObservableFooer extends InheritableEventEmitter<FooEvents> {

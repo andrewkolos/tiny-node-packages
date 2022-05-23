@@ -1,1 +1,1 @@
-export type Events<T> = { [K in keyof T]: [...args: any[]] };
+export type Events<T> = { [K in keyof T]: (...args: any[]) => any; };
